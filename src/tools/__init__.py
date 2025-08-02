@@ -29,6 +29,12 @@ from .file_operations import (
     get_file_operation_tools
 )
 
+from .checkpoint_file_operations import (
+    initialize_checkpoint_file_ops,
+    get_checkpoint_manager,
+    get_checkpoint_aware_file_operation_tools
+)
+
 from .terminal_operations import (
     execute_command,
     get_terminal_state,
@@ -65,6 +71,11 @@ __all__ = [
     "list_files",
     "check_mcp_installation",
     "get_file_operation_tools",
+    
+    # Checkpoint-aware file operations
+    "initialize_checkpoint_file_ops",
+    "get_checkpoint_manager",
+    "get_checkpoint_aware_file_operation_tools",
     
     # Terminal operation tools
     "execute_command",

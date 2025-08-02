@@ -22,8 +22,12 @@ from ..tools import (
     get_web_search_tools, 
     is_web_search_available, 
     get_file_operation_tools,
-    get_terminal_operation_tools
+    get_terminal_operation_tools,
+    initialize_checkpoint_file_ops,
+    get_checkpoint_aware_file_operation_tools
 )
+from ..checkpoint import CheckpointManager
+from ..commands import SlashCommandHandler
 from ..config import config_manager
 from ..rcode_mcp import initialize_mcp_from_config, get_mcp_tools, is_mcp_available, get_mcp_info_tools
 
@@ -44,6 +48,13 @@ class RCodeAgent:
         self.config = config_manager.load_config()
         self.custom_rules = config_manager.load_rules()
         self.mcp_initialized = False
+        
+        # Initialize checkpoint system
+        self.checkpoint_manager = CheckpointManager()
+        self.slash_command_handler = SlashCommandHandler(self.checkpoint_manager)
+        
+        # Initialize checkpoint-aware file operations
+        initialize_checkpoint_file_ops(self.checkpoint_manager)
         
         # Initialize everything
         self._initialize_models()
@@ -129,9 +140,9 @@ class RCodeAgent:
         if tool_config.get("web_search", {}).get("enabled", True) and is_web_search_available():
             tools.extend(get_web_search_tools())
         
-        # Add file operation tools if enabled (default: enabled)
+        # Add checkpoint-aware file operation tools if enabled (default: enabled)
         if tool_config.get("file_operations", {}).get("enabled", True):
-            tools.extend(get_file_operation_tools())
+            tools.extend(get_checkpoint_aware_file_operation_tools())
         
         # Add terminal operation tools if enabled (default: enabled)
         if tool_config.get("terminal_operations", {}).get("enabled", True):
@@ -193,6 +204,17 @@ class RCodeAgent:
 
     async def astream_chat(self, message: str, thread_id: str = "default"):
         """Async stream with beautiful tool separation and clean token streaming"""
+        # Check for slash commands first
+        if self.slash_command_handler.is_slash_command(message):
+            try:
+                command_response = await self.slash_command_handler.handle_command(message)
+                if command_response:
+                    yield {"type": "token", "content": command_response}
+                    return
+            except Exception as e:
+                yield {"type": "token", "content": f"❌ Command error: {str(e)}"}
+                return
+        
         config = {"configurable": {"thread_id": thread_id}}
         
         # Use combined streaming modes for complete experience

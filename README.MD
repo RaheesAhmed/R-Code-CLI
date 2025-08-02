@@ -2,9 +2,11 @@
 
 > **AI-Powered Interactive Code Assistant**
 
-![rcode CLI Screenshot](static/Screenshot.png)
+![R-Code CLI Screenshot](static/Screenshot.png)
 
-rcode is an intelligent CLI tool that provides an interactive chat interface powered by Claude AI for code generation, fixing, and assistance. Simply chat with the AI about your code needs in natural language.
+> \*_THIS PROJECT IS UNDER CONSTRUCTION MAY ALL FEATURE MAY NOT WORK_
+
+R-Code is an intelligent CLI tool that provides an interactive chat interface powered by Claude AI for code generation, fixing, and assistance. Simply chat with the AI about your code needs in natural language.
 
 ## 🚀 Key Features
 
@@ -46,8 +48,9 @@ ANTHROPIC_API_KEY=your-api-key-here
 
 ```bash
 # Clone and install
-git clone https://github.com/RaheesAhmed/R-Code.git
+git clone https://github.com/RaheesAhmed/R-Code-CLI.git
 cd R-Code
+pip install -r requirements.txt
 
 
 
@@ -58,13 +61,15 @@ cd R-Code
 ### Start Interactive Chat
 
 ```bash
-# Simply run rcode (defaults to chat mode)
-rcode
+python cli.py
+
+# Simply run R-Code (defaults to chat mode)
+R-Code
 
 # Or explicitly use chat command
-rcode chat
+R-Code chat
 # or shorthand
-rcode c
+R-Code c
 ```
 
 ### Chat Interface
@@ -83,7 +88,7 @@ Once in chat mode, you can:
 ### Example Session
 
 ```
-$ rcode
+$ R-Code
 
 Welcome to R-CODE
   Type your message below. Use "exit" to quit.
@@ -99,13 +104,17 @@ Goodbye!
 
 ## 🔧 Available Slash Commands
 
-| Command        | Description                     |
-| -------------- | ------------------------------- |
-| `/help`        | Show available commands         |
-| `/undo`        | Undo the last operation         |
-| `/revert <id>` | Revert to a specific checkpoint |
-| `/checkpoints` | List all available checkpoints  |
-| `/status`      | Show current session status     |
+| Command                | Description                     |
+| ---------------------- | ------------------------------- |
+| `/help`                | Show available commands         |
+| `/undo`                | Undo the last AI operation      |
+| `/revert <id>`         | Revert to a specific checkpoint |
+| `/checkpoints [limit]` | List available checkpoints      |
+| `/status`              | Show current session status     |
+| `/save <description>`  | Create a manual checkpoint      |
+| `/clean [count]`       | Clean old checkpoints           |
+| `/diff <id>`           | Show changes in a checkpoint    |
+| `/export <id>`         | Export checkpoint data          |
 
 ## 🛡️ Project Structure
 

@@ -201,6 +201,10 @@ async def run_chat_interface(preferred_model: str, task_type: str):
     else:
         mcp_status = "⚠️  MCP unavailable (install langchain-mcp-adapters)"
     
+    # Get checkpoint system status
+    checkpoint_status = agent.checkpoint_manager.get_status()
+    checkpoint_info = f"🔄 Checkpoints: {checkpoint_status['total_checkpoints']} saved, auto-tracking enabled"
+    
     # Success message with elegant styling
     console.print(Panel(
         "[bold green]✨ R-Code AI Assistant Ready[/bold green]\n\n"
@@ -209,7 +213,8 @@ async def run_chat_interface(preferred_model: str, task_type: str):
         f"[dim]📁 Config: {config_info['config_dir']}[/dim]\n"
         f"[dim]🤖 Models: {', '.join(config_info['enabled_models'])}[/dim]\n"
         f"[dim]{web_search_status}[/dim]\n"
-        f"[dim]{mcp_status}[/dim]",
+        f"[dim]{mcp_status}[/dim]\n"
+        f"[dim]{checkpoint_info}[/dim]",
         title="[bold rgb(255,106,0)]Welcome to R-Code",
         border_style="rgb(255,106,0)",
         padding=(1, 2)
@@ -295,13 +300,21 @@ def show_premium_help():
         "[green]help[/green]          Show this help message\n"
         "[green]status[/green]        Show detailed agent status\n"
         "[green]exit[/green]          Exit the chat session\n\n"
+        "[bold cyan]🔄 Checkpoint Commands[/bold cyan]\n\n"
+        "[yellow]/help[/yellow]        Show checkpoint commands\n"
+        "[yellow]/undo[/yellow]        Undo last AI operation\n"
+        "[yellow]/checkpoints[/yellow] View save points\n"
+        "[yellow]/revert <id>[/yellow] Revert to checkpoint\n"
+        "[yellow]/status[/yellow]      Show session info\n"
+        "[yellow]/save <desc>[/yellow] Create checkpoint\n\n"
         "[bold cyan]💻 What I can do for you[/bold cyan]\n\n"
         "✨ [white]Generate, fix, and refactor code[/white]\n"
         "📁 [white]Read, write, and modify files[/white]\n"
         "🏗️  [white]Create directories and manage project structure[/white]\n"
         "🔍 [white]Analyze codebases and provide solutions[/white]\n"
         "📚 [white]Write documentation and tests[/white]\n"
-        "🚀 [white]Debug issues and optimize performance[/white]\n\n"
+        "🚀 [white]Debug issues and optimize performance[/white]\n"
+        "🔄 [white]Automatically track and revert changes[/white]\n\n"
         "[bold cyan]💡 Example Requests[/bold cyan]\n\n"
         "[dim]→[/dim] [italic]'Create a Python Flask API for user management'[/italic]\n"
         "[dim]→[/dim] [italic]'Fix the bug in src/main.py'[/italic]\n"
