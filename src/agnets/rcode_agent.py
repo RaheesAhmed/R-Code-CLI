@@ -31,6 +31,7 @@ from ..checkpoint import CheckpointManager
 from ..commands import SlashCommandHandler
 from ..config import config_manager
 from ..rcode_mcp import initialize_mcp_from_config, get_mcp_tools, is_mcp_available, get_mcp_info_tools
+from ..context import ContextProvider, get_context_tools
 
 
 class RCodeState(TypedDict):
@@ -56,6 +57,10 @@ class RCodeAgent:
         
         # Initialize checkpoint-aware file operations
         initialize_checkpoint_file_ops(self.checkpoint_manager)
+        
+        # Initialize context provider
+        project_root = os.getcwd()
+        self.context_provider = ContextProvider(project_root)
         
         # Initialize everything
         self._initialize_models()
@@ -155,6 +160,9 @@ class RCodeAgent:
         
         # Add MCP info tools
         tools.extend(get_mcp_info_tools())
+        
+        # Add context-aware tools
+        tools.extend(get_context_tools())
         
         # Get primary model from config
         primary_model_key = self.config.get("models", {}).get("primary", "claude")
