@@ -13,13 +13,10 @@ Welcome to the comprehensive documentation for R-Code CLI, the most advanced AI 
 ### **User Guides**
 
 - [📖 User Guide](user-guide.md) - Complete feature walkthrough
-- [💡 Examples](examples/) - Real-world usage examples
-- [📋 Command Reference](api-reference.md) - All commands and options
 
 ### **Advanced Topics**
 
 - [🔧 Development Guide](development.md) - Contributing and extending R-Code
-- [🏗️ Architecture](architecture.md) - System design and components
 - [🔒 Security Guide](security.md) - Security features and best practices
 
 ### **Integration**
@@ -35,12 +32,6 @@ Welcome to the comprehensive documentation for R-Code CLI, the most advanced AI 
 Start with our [Getting Started Guide](getting-started.md) for a smooth onboarding experience.
 
 ### **Looking for Examples?**
-
-Check out our [Examples Directory](examples/) with real projects and use cases.
-
-### **Need Help?**
-
-Visit our [Troubleshooting Guide](troubleshooting.md) or join our community.
 
 ### **Want to Contribute?**
 

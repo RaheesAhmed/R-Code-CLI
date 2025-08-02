@@ -253,16 +253,8 @@ graph TB
 </td>
 <td width="50%">
 
-#### **💡 Examples & Tutorials**
-
-- **[🎯 Usage Examples](docs/examples/)** - Real-world scenarios
-- **[🐍 Python Projects](docs/examples/python/)** - Flask, Django, FastAPI
-- **[🌐 Web Development](docs/examples/web/)** - React, Vue, Node.js
-- **[⚙️ DevOps Examples](docs/examples/devops/)** - Docker, CI/CD, AWS
-
 #### **🏗️ Advanced Topics**
 
-- **[🏛️ Architecture Guide](docs/architecture.md)** - System design
 - **[🔧 Development Guide](docs/development.md)** - Contributing code
 - **[🔒 Security Guide](docs/security.md)** - Security best practices
 
@@ -507,7 +499,7 @@ For organizations requiring professional support:
 - 🧠 **Context System**: Complete project understanding
 - ⏰ **Time Travel**: Checkpoint and undo system
 - 🛡️ **Security**: Human approval system
-- 📚 **Documentation**: Comprehensive guides and examples
+- 📚 **Documentation**: Comprehensive guides and docs
 
 ---
 
