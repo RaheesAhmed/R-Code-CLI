@@ -1,0 +1,483 @@
+
+# ====================
+# Python
+# ====================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff
+instance/
+.webassets-cache
+
+# Scrapy stuff
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+.idea/
+
+# ====================
+# AI/ML Specific
+# ====================
+# Model files
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.pb
+*.onnx
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# Dataset files
+*.csv
+*.tsv
+*.json
+*.jsonl
+*.parquet
+*.feather
+*.arrow
+
+# Large data directories
+data/
+datasets/
+models/
+checkpoints/
+weights/
+artifacts/
+
+# Jupyter notebook outputs
+*.ipynb
+
+# TensorBoard logs
+logs/
+tensorboard/
+runs/
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Weights & Biases
+wandb/
+
+# DVC
+.dvc/
+.dvcignore
+
+# ====================
+# LangChain/LangGraph Specific
+# ====================
+# Vector stores
+*.faiss
+*.index
+chroma_db/
+vector_store/
+
+# LangChain cache
+.langchain/
+langchain_cache/
+
+# LangGraph checkpoints
+checkpoints/
+graph_state/
+
+# ====================
+# MCP (Model Context Protocol)
+# ====================
+# MCP server configurations (if they contain secrets)
+mcp_servers/
+.mcp/
+
+# MCP server logs
+mcp*.log
+
+# ====================
+# Database
+# ====================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# PostgreSQL
+*.sql
+*.dump
+
+# Redis dump files
+dump.rdb
+
+# ====================
+# Logging
+# ====================
+*.log
+*.log.*
+logs/
+log/
+
+# Specific log files for this project
+context-engine*.log
+agent*.log
+terminal*.log
+mcp*.log
+
+# ====================
+# Configuration & Secrets
+# ====================
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# API keys and secrets
+secrets.json
+api_keys.json
+.secrets/
+credentials/
+
+# Configuration backups
+config*.bak
+*.conf.bak
+
+# ====================
+# IDEs and Editors
+# ====================
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built VSCode Extensions
+*.vsix
+
+# PyCharm
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*~
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ====================
+# Operating System
+# ====================
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ====================
+# Development Tools
+# ====================
+# Node.js (if using for tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+
+# Profiling
+*.prof
+
+# ====================
+# Temporary Files
+# ====================
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+*.rej
+
+# Temporary directories
+tmp/
+temp/
+.tmp/
+
+
+
+# Context engine outputs
+context_cache/
+analysis_cache/
+
+# Terminal operation logs
+terminal_sessions/
+
+# Agent checkpoints
+agent_checkpoints/
+
+# Development artifacts
+dev/
+scratch/
+playground/
+
+# Build artifacts
+build/
+dist/
+
+# Documentation builds
+docs/_build/
+docs/build/
+
+# Static files
+static/uploads/
+static/cache/
+
+# ====================
+# Cloud & Deployment
+# ====================
+# Docker
+.dockerignore
+
+# Kubernetes
+*.kubeconfig
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# AWS
+.aws/
+
+# Google Cloud
+.gcloud/
+
+# Azure
+.azure/
+
+# ====================
+# Backup Files
+# ====================
+*.bak
+*.backup
+*.old
+*~
+
+# ====================
+# Archives
+# ====================
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+/langgraph/
+old_system_prompt.md
+*.rar
+*.tar
+*.zip
+
+# ====================
+# End of .gitignore
+# ====================
+
+# ====================
+# R-Code Configuration Protection
+# ====================
+# SECURITY: Protect .rcode/ directory from version control
+# Contains sensitive data: API keys, credentials, personal settings
+.rcode/
+!.rcode/config.json.example
+!.rcode/rules.md.example
+!.rcode/mcp-servers.json.example

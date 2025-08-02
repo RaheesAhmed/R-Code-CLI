@@ -1,0 +1,46 @@
+# Multi-Agent Coding System Dependencies
+# =====================================
+
+# Core LangChain & LangGraph
+langchain==0.3.19
+langchain-core==0.3.28
+langchain-openai==0.2.15
+langgraph==0.2.52
+langchain-anthropic==0.3.16
+langchain-mcp-adapters==0.2.1
+
+# Database & State Management
+sqlalchemy==2.0.25
+
+# Async & HTTP
+aiohttp==3.10.13
+httpx==0.28.1
+
+# Data Processing & Validation
+pydantic==2.10.5
+typing-extensions==4.14.1
+dataclasses-json==0.6.7
+
+# System Monitoring & Process Management
+psutil==6.1.0
+
+# CLI & User Interface
+click==8.1.8
+rich==13.9.4
+typer==0.15.1
+inquirer==3.4.0
+
+# Logging & Monitoring
+loguru==0.7.3
+python-dotenv==1.0.1
+
+# Development & Testing
+pytest==8.3.4
+pytest-asyncio==0.25.0
+black==24.10.0
+flake8==7.1.1
+mypy==1.14.0
+
+# Optional: For enhanced features
+redis==5.2.1
+psycopg2-binary==2.9.10
