@@ -230,7 +230,7 @@ async def handle_human_approval(agent, thread_id: str, console: Console) -> Opti
 
 async def run_chat_interface(preferred_model: str, task_type: str):
     """Run the premium interactive chat interface with R-Code agent"""
-    from .agnets import RCodeAgent
+    from .agents import RCodeAgent
     from .tools import is_web_search_available
     from .config import config_manager
     from .rcode_mcp import is_mcp_available, get_mcp_status
