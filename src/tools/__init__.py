@@ -50,6 +50,21 @@ from .terminal_operations import (
     get_terminal_operation_tools
 )
 
+from .approval_terminal_operations import (
+    execute_command_with_approval,
+    analyze_command_security,
+    configure_terminal_approval,
+    show_terminal_approval_status,
+    get_approval_aware_terminal_tools
+)
+
+from .human_approval import (
+    request_terminal_approval,
+    get_command_analysis,
+    is_command_safe,
+    format_command_analysis
+)
+
 __all__ = [
     # Web search tools
     "web_search",
@@ -89,5 +104,18 @@ __all__ = [
     "list_terminal_sessions",
     "set_environment_variable",
     "get_environment_variables",
-    "get_terminal_operation_tools"
+    "get_terminal_operation_tools",
+    
+    # Approval-aware terminal operations
+    "execute_command_with_approval",
+    "analyze_command_security",
+    "configure_terminal_approval", 
+    "show_terminal_approval_status",
+    "get_approval_aware_terminal_tools",
+    
+    # Human approval system
+    "request_terminal_approval",
+    "get_command_analysis",
+    "is_command_safe",
+    "format_command_analysis"
 ]

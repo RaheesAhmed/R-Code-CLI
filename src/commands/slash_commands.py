@@ -37,7 +37,9 @@ class SlashCommandHandler:
             'save': self.handle_save,
             'clean': self.handle_clean,
             'export': self.handle_export,
-            'diff': self.handle_diff
+            'diff': self.handle_diff,
+            'approve-command': self.handle_approve_command,
+            'always-approve': self.handle_always_approve
         }
     
     def is_slash_command(self, message: str) -> bool:
@@ -408,6 +410,82 @@ class SlashCommandHandler:
         }
         
         return self._format_info(f"📖 Help: /{command}\n\n{help_info.get(command, 'No help available')}")
+    
+    async def handle_approve_command(self, args: List[str]) -> str:
+        """Approve and execute a specific terminal command"""
+        if not args:
+            return self._format_error("Usage: /approve-command \"<command>\"")
+        
+        # Join all args to get the full command (handles quoted strings)
+        command = " ".join(args).strip('"\'')
+        
+        if not command:
+            return self._format_error("Please provide a command to approve")
+        
+        try:
+            # Import here to avoid circular imports
+            from ..tools.terminal_operations import _terminal_ops
+            
+            # Execute the command directly (bypassing approval)
+            result = _terminal_ops.execute_command(command=command)
+            
+            # Format execution result
+            status_emoji = "✅" if result.exit_code == 0 else "❌"
+            
+            formatted_result = f"🔓 Command approved and executed:\n\n"
+            formatted_result += f"{status_emoji} Command: {result.command}\n"
+            formatted_result += f"📊 Status: {result.status.value} (Exit Code: {result.exit_code})\n"
+            formatted_result += f"⏱️  Execution Time: {result.execution_time:.2f}s\n"
+            formatted_result += f"📁 Working Directory: {result.working_directory}\n"
+            
+            if result.stdout:
+                formatted_result += f"\n📤 STDOUT:\n{result.stdout}\n"
+            
+            if result.stderr:
+                formatted_result += f"\n📥 STDERR:\n{result.stderr}\n"
+            
+            return self._format_success(formatted_result)
+            
+        except Exception as e:
+            return self._format_error(f"❌ Failed to execute command: {str(e)}")
+    
+    async def handle_always_approve(self, args: List[str]) -> str:
+        """Add a command to the always-approve list"""
+        if not args:
+            return self._format_error("Usage: /always-approve \"<command>\"")
+        
+        # Join all args to get the full command
+        command = " ".join(args).strip('"\'')
+        
+        if not command:
+            return self._format_error("Please provide a command to add to safe list")
+        
+        try:
+            # Import config manager
+            from ..config import config_manager
+            
+            # Get base command (first word)
+            base_command = command.split()[0]
+            
+            # Load current config
+            config = config_manager.load_config()
+            safe_commands = config.get("tools", {}).get("terminal_operations", {}).get("safe_commands", [])
+            
+            if base_command not in safe_commands:
+                safe_commands.append(base_command)
+                config["tools"]["terminal_operations"]["safe_commands"] = safe_commands
+                config_manager.save_config(config)
+                
+                return self._format_success(
+                    f"✅ Added '{base_command}' to safe commands list\n"
+                    f"🟢 Future '{base_command}' commands will be auto-approved\n"
+                    f"💾 Configuration saved"
+                )
+            else:
+                return self._format_info(f"ℹ️  '{base_command}' is already in the safe commands list")
+                
+        except Exception as e:
+            return self._format_error(f"❌ Failed to update safe commands: {str(e)}")
     
     def _format_success(self, message: str) -> str:
         """Format success message"""

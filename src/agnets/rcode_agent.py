@@ -23,6 +23,7 @@ from ..tools import (
     is_web_search_available, 
     get_file_operation_tools,
     get_terminal_operation_tools,
+    get_approval_aware_terminal_tools,
     initialize_checkpoint_file_ops,
     get_checkpoint_aware_file_operation_tools
 )
@@ -144,9 +145,9 @@ class RCodeAgent:
         if tool_config.get("file_operations", {}).get("enabled", True):
             tools.extend(get_checkpoint_aware_file_operation_tools())
         
-        # Add terminal operation tools if enabled (default: enabled)
+        # Add approval-aware terminal operation tools if enabled (default: enabled)
         if tool_config.get("terminal_operations", {}).get("enabled", True):
-            tools.extend(get_terminal_operation_tools())
+            tools.extend(get_approval_aware_terminal_tools())
         
         # Add MCP tools if available
         if is_mcp_available():

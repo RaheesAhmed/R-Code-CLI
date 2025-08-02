@@ -91,6 +91,25 @@ class RCodeConfigManager:
                     "enabled": True,
                     "live_coding": True,
                     "vscode_integration": True
+                },
+                "terminal_operations": {
+                    "enabled": True,
+                    "human_approval_required": True,
+                    "auto_approve_safe_commands": False,
+                    "allowed_directories": ["."],
+                    "restricted_directories": [],
+                    "safe_commands": [
+                        "ls", "dir", "pwd", "whoami", "echo", "cat", "head", "tail",
+                        "grep", "find", "which", "where", "type", "help", "--help",
+                        "git status", "git log", "git diff", "git branch", "npm list",
+                        "pip list", "python --version", "node --version", "npm --version"
+                    ],
+                    "dangerous_commands": [
+                        "rm", "del", "rmdir", "rd", "format", "fdisk", "dd",
+                        "shutdown", "reboot", "halt", "poweroff", "kill", "killall",
+                        "sudo", "su", "chmod", "chown", "passwd", "useradd", "userdel",
+                        "curl", "wget", "ssh", "scp", "rsync", "mount", "umount"
+                    ]
                 }
             },
             "ui": {

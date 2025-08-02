@@ -163,6 +163,71 @@ class PremiumUI:
         )
 
 
+async def handle_human_approval(agent, thread_id: str, console: Console) -> Optional[str]:
+    """Handle human approval workflow for terminal commands"""
+    from langgraph.types import Command
+    
+    try:
+        # Get the current state to see if there's an interrupt
+        state = agent.graph.get_state({"configurable": {"thread_id": thread_id}})
+        
+        if not state or not hasattr(state, 'next') or 'interrupt' not in str(state):
+            return None
+        
+        # Check for terminal approval interrupt
+        interrupts = getattr(state, 'interrupts', [])
+        if not interrupts:
+            return None
+        
+        for interrupt in interrupts:
+            if interrupt.get('type') == 'terminal_approval':
+                # Display the approval request
+                approval_request = interrupt.get('approval_request', '')
+                if approval_request:
+                    console.print(approval_request)
+                
+                # Get user response
+                console.print()
+                console.print("[bold yellow]🔐 Human Approval Required[/bold yellow]")
+                response = console.input("[bold cyan]Your response (approve/deny/modify/always-approve/always-deny):[/bold cyan] ").strip().lower()
+                
+                # Handle different response types
+                if response in ['approve', 'yes', 'y', 'allow']:
+                    command = Command(resume={"action": "approve"})
+                elif response in ['deny', 'no', 'n', 'block', 'reject']:
+                    command = Command(resume={"action": "deny"})
+                elif response in ['modify', 'edit', 'm']:
+                    original_command = interrupt.get('command', '')
+                    console.print(f"[dim]Original command: {original_command}[/dim]")
+                    modified_command = console.input("[bold cyan]Enter modified command:[/bold cyan] ").strip()
+                    command = Command(resume={"action": "modify", "modified_command": modified_command})
+                elif response in ['always-approve', 'always-allow', 'whitelist']:
+                    command = Command(resume={"action": "always-approve"})
+                elif response in ['always-deny', 'always-block', 'blacklist']:
+                    command = Command(resume={"action": "always-deny"})
+                else:
+                    console.print("[red]❌ Invalid response. Defaulting to deny.[/red]")
+                    command = Command(resume={"action": "deny"})
+                
+                # Resume execution with the command
+                config = {"configurable": {"thread_id": thread_id}}
+                
+                # Continue the conversation with the approval response
+                async for chunk in agent.graph.astream(command, config, stream_mode="values"):
+                    if "messages" in chunk:
+                        last_message = chunk["messages"][-1]
+                        if hasattr(last_message, 'content'):
+                            return str(last_message.content)
+                
+                return "✅ Command processed"
+        
+        return None
+        
+    except Exception as e:
+        console.print(f"[red]❌ Error in approval workflow: {str(e)}[/red]")
+        return None
+
+
 async def run_chat_interface(preferred_model: str, task_type: str):
     """Run the premium interactive chat interface with R-Code agent"""
     from .agnets import RCodeAgent
@@ -255,25 +320,38 @@ async def run_chat_interface(preferred_model: str, task_type: str):
             console.print()
             console.print("[bold rgb(255,106,0)]┌─ R-Code Assistant[/bold rgb(255,106,0)]")
             
-            # Use async streaming to support MCP tools - we're already in async context
-            async for chunk in agent.astream_chat(user_input, thread_id):
-                if chunk["type"] == "tool_use":
-                    # Show beautiful tool usage indicator
-                    tool_name = chunk.get("tool_name", "Tool")
-                    console.print(f"\n[dim yellow]🔍 Using {tool_name}...[/dim yellow]")
-                elif chunk["type"] == "tool_result":
-                    # Show tool results in beautiful panels
-                    tool_name = chunk.get("tool_name", "Tool")
-                    console.print()
-                    console.print(Panel(
-                        chunk["content"],
-                        title=f"[bold blue]🔍 {tool_name}[/bold blue]",
-                        border_style="blue",
-                        padding=(1, 1)
-                    ))
-                elif chunk["type"] == "token":
-                    # Stream clean AI response text
-                    print(chunk["content"], end="", flush=True)
+            # Use async streaming with interrupt handling for human approval
+            try:
+                async for chunk in agent.astream_chat(user_input, thread_id):
+                    if chunk["type"] == "tool_use":
+                        # Show beautiful tool usage indicator
+                        tool_name = chunk.get("tool_name", "Tool")
+                        console.print(f"\n[dim yellow]🔍 Using {tool_name}...[/dim yellow]")
+                    elif chunk["type"] == "tool_result":
+                        # Show tool results in beautiful panels
+                        tool_name = chunk.get("tool_name", "Tool")
+                        console.print()
+                        console.print(Panel(
+                            chunk["content"],
+                            title=f"[bold blue]🔍 {tool_name}[/bold blue]",
+                            border_style="blue",
+                            padding=(1, 1)
+                        ))
+                    elif chunk["type"] == "token":
+                        # Stream clean AI response text
+                        print(chunk["content"], end="", flush=True)
+            
+            except Exception as e:
+                # Check if this is a LangGraph interrupt for human approval
+                if "interrupt" in str(e).lower() or hasattr(e, '__cause__'):
+                    # Handle human approval workflow
+                    approval_response = await handle_human_approval(agent, thread_id, console)
+                    if approval_response:
+                        console.print(f"\n{approval_response}")
+                    continue
+                else:
+                    # Regular error handling
+                    raise e
             
             console.print()
             console.print("[bold rgb(255,106,0)]└─[/bold rgb(255,106,0)]")
