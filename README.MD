@@ -10,7 +10,7 @@ _Context-Aware • Never Break Code Again • Professional Grade_
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/RaheesAhmed/R-Code-CLI)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Security](https://img.shields.io/badge/security-bug%20bounty-red.svg)](SECURITY.md)
+[![Security](https://img.shields.io/badge/security-bug%20red.svg)](SECURITY.md)
 
 [🚀 Quick Start](#-quick-start) • [📖 Documentation](#-documentation) • [🤝 Contributing](#-contributing) • [💬 Community](#-community)
 
@@ -398,7 +398,7 @@ R-Code CLI is protected by a comprehensive legal framework that ensures both ope
 - **[Terms of Service](TERMS.md)** - User agreement and acceptable use policy
 - **[Privacy Policy](PRIVACY.md)** - Data protection and user privacy rights
 - **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community standards and enforcement
-- **[Security Policy](SECURITY.md)** - Vulnerability reporting and bug bounty
+- **[Security Policy](SECURITY.md)** - Vulnerability reporting
 - **[Trademark Policy](TRADEMARK.md)** - Brand protection and usage guidelines
 - **[Contributing Guide](CONTRIBUTING.md)** - Contribution standards and IP assignment
 
@@ -422,17 +422,6 @@ We recognize our amazing contributors:
 - ✨ **Community Champions**: Outstanding community support and mentorship
 
 _[Be the first to contribute and get listed here!]_
-
-### **Bug Bounty Program**
-
-We reward security researchers who help improve R-Code CLI:
-
-- 🚨 **Critical Vulnerabilities**: $500 + Hall of Fame
-- ⚠️ **High Severity**: $200 + Hall of Fame
-- 🔍 **Medium Severity**: $50 + Hall of Fame
-- 📝 **Documentation**: Hall of Fame recognition
-
----
 
 ## 📊 **Project Stats**
 
