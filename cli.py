@@ -2,7 +2,6 @@
 """
 R-Code CLI - Main Entry Script
 ==============================
-
 This is the main entry point for the R-Code CLI application.
 Redirects to the main application logic in src/main.py.
 """
