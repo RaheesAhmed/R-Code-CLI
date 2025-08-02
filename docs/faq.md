@@ -287,7 +287,7 @@ If files were deleted outside R-Code, use your version control system or system 
 
 - **Bugs**: [GitHub Issues](https://github.com/RaheesAhmed/R-Code-CLI/issues)
 - **Features**: [GitHub Discussions](https://github.com/RaheesAhmed/R-Code-CLI/discussions)
-- **Security**: [security@rcode.dev](mailto:security@rcode.dev)
+- **Security**: [rahesahmed37@gmail.com](mailto:rahesahmed37@gmail.com)
 
 ### **Q: Can I contribute to R-Code CLI?**
 
@@ -310,9 +310,9 @@ If files were deleted outside R-Code, use your version control system or system 
 
 **A:** Yes! Contact us for:
 
-- **Enterprise support**: [enterprise@rcode.dev](mailto:enterprise@rcode.dev)
-- **Custom development**: [custom@rcode.dev](mailto:custom@rcode.dev)
-- **Training & consulting**: [training@rcode.dev](mailto:training@rcode.dev)
+- **Enterprise support**: [rahesahmed37@gmail.com](mailto:rahesahmed37@gmail.com)
+- **Custom development**: [rahesahmed37@gmail.com](mailto:rahesahmed37@gmail.com)
+- **Training & consulting**: [rahesahmed37@gmail.com](mailto:rahesahmed37@gmail.com)
 
 ## ⚖️ Legal & Licensing
 

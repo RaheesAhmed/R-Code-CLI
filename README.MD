@@ -476,7 +476,7 @@ We reward security researchers who help improve R-Code CLI:
 For organizations requiring professional support:
 
 - 🏢 **Enterprise Licensing**: [rahesahmed37@gmail.com](mailto:rahesahmed37@gmail.com)
-- 🤝 **Partnerships**: [partnerships@rcode.dev](mailto:partnerships@rcode.dev)
+- 🤝 **Partnerships**: [rahesahmed37@gmail.com](mailto:rahesahmed37@gmail.com)
 - 🛠️ **Custom Development**: [rahesahmed37@gmail.com](mailto:rahesahmed37@gmail.com)
 
 ---
