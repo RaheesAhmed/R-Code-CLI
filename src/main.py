@@ -562,8 +562,4 @@ async def main():
     await chat_agent.run_chat()
 
 
-if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        console.print("\n[yellow]👋 Goodbye![/yellow]")
+

@@ -99,6 +99,23 @@ R-Code CLI is not just another AI coding assistant. It's a **context-aware, proj
 
 ### **Installation**
 
+#### **🎯 PyPI Installation (Recommended)**
+
+```bash
+# Install from PyPI
+pip install rcode-cli
+
+# Set your API key
+export ANTHROPIC_API_KEY="your-api-key-here"
+# or
+export OPENAI_API_KEY="your-api-key-here"
+
+# Start R-Code
+rcode
+```
+
+#### **🔧 Development Installation**
+
 ```bash
 # Clone the repository
 git clone https://github.com/RaheesAhmed/R-Code-CLI.git
