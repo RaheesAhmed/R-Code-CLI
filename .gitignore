@@ -156,7 +156,7 @@ cython_debug/
 # Large data directories
 data/
 datasets/
-models/
+
 checkpoints/
 weights/
 artifacts/

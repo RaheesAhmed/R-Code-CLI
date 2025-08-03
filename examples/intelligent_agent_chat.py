@@ -1,12 +1,10 @@
-#!/usr/bin/env python3
 """
-R-Code CLI Entry Point
-=====================
+R-Code Intelligent Agent Chat
+============================
 
-Main entry point for the R-Code AI-powered interactive code assistant.
-Provides a modern CLI interface with rich formatting and interactive features.
+Interactive chat using the same premium UI/UX as the main R-Code CLI.
+Matches the professional Ali Baba-inspired design and behavior.
 """
-
 
 import asyncio
 import os

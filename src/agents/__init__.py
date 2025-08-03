@@ -1,12 +1,14 @@
 """
-R-Code AI Agent
-==============
+R-Code AI Agents
+===============
 
-Simple, powerful R-Code AI agent with full project capabilities.
+Intelligent AI agents for R-Code with learning capabilities and dynamic context management.
 """
 
-from .rcode_agent import RCodeAgent
+from .rcode_agent import IntelligentRCodeAgent, RCodeContext, IntelligentRCodeState
 
 __all__ = [
-    "RCodeAgent"
+    "IntelligentRCodeAgent",
+    "RCodeContext", 
+    "IntelligentRCodeState"
 ]
