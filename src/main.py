@@ -293,8 +293,7 @@ class ChatAgent:
             "I can read, write, modify files, and help with any coding task.[/dim white]\n\n"
             f"[dim]🎯 Session: {self.session_id}[/dim]\n"
             f"[dim]🤖 Agent: {str(self.agent)}[/dim]\n"
-            f"[dim]📚 Learning system active[/dim]\n"
-            f"[dim]🔧 Real-time tool execution[/dim]",
+            f"[dim]📚 Learning system active[/dim]\n",
             title="[bold rgb(255,106,0)]Welcome to R-Code Chat",
             border_style="rgb(255,106,0)",
             padding=(1, 2)
