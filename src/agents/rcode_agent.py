@@ -2,7 +2,7 @@
 Intelligent R-Code AI Agent
 ===========================
 
-Enhanced AI agent with dynamic prompts, learning capabilities, and intelligent context management.
+AI agent with dynamic prompts, learning capabilities, and intelligent context management.
 Uses LangGraph v0.6 context system for persistent learning and adaptive behavior.
 """
 
@@ -86,7 +86,7 @@ class RCodeContext:
 
 
 class IntelligentRCodeState(AgentState):
-    """Enhanced state with learning and context data"""
+    """ state with learning and context data"""
     messages: Annotated[List[BaseMessage], add_messages]
     
     # Dynamic context that evolves during conversation
@@ -329,7 +329,7 @@ class DynamicPromptGenerator:
 
 
 class IntelligentRCodeAgent:
-    """Enhanced R-Code AI agent with learning and intelligent context"""
+    """ R-Code AI agent with learning and intelligent context"""
     
     def __init__(self):
         """Initialize intelligent R-Code agent"""
@@ -465,7 +465,7 @@ class IntelligentRCodeAgent:
             
             return [{"role": "system", "content": prompt_content}] + state["messages"]
         
-        # Create react agent with dynamic prompts
+        # Create react agent with clean approach - let create_react_agent handle tool binding
         self.graph = create_react_agent(
             self.primary_model,
             tools,
@@ -520,7 +520,7 @@ class IntelligentRCodeAgent:
         self.learning_store.save_project_memory(project_root, project_memory)
     
     async def astream_chat(self, message: str, context: RCodeContext = None, thread_id: str = "default"):
-        """Enhanced async streaming with learning and context adaptation"""
+        """ async streaming with learning and context adaptation"""
         if context is None:
             context = RCodeContext()
         
@@ -552,7 +552,7 @@ class IntelligentRCodeAgent:
         
         ai_response_parts = []
         
-        # Stream with enhanced context
+        # Stream with  context
         async for stream_mode, chunk in self.graph.astream(
             initial_state,
             config,

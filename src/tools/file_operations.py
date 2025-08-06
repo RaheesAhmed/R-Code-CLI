@@ -12,6 +12,22 @@ import fnmatch
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Union
 from langchain_core.tools import tool
+from pydantic import BaseModel, Field
+
+
+# Input schemas for tools
+class WriteFileInputSchema(BaseModel):
+    """Input schema for write_file"""
+    file_path: str = Field(description="Path where to write the file")
+    content: str = Field(description="Content to write to the file")
+
+
+class ReplaceInFileInputSchema(BaseModel):
+    """Input schema for replace_in_file"""
+    file_path: str = Field(description="Path to the file to modify")
+    search_term: str = Field(description="Text to find and replace")
+    replace_term: str = Field(description="Text to replace with")
+    case_sensitive: bool = Field(default=False, description="Whether replacement should be case sensitive")
 
 
 class RCodeFileOperations:
@@ -285,7 +301,24 @@ class RCodeFileOperations:
             }
     
     def list_files(self, dir_path: str = ".", pattern: str = "*", recursive: bool = False) -> Dict[str, Any]:
-        """List files in directory"""
+        """List files in directory with smart filtering"""
+        # Common directories to ignore (saves massive token usage)
+        IGNORED_DIRS = {
+            '.venv', 'venv', 'env', '.env',
+            'node_modules', '.next', '.nuxt', 'dist', 'build',
+            '__pycache__', '.pytest_cache', '.mypy_cache', '.tox',
+            '.git', '.hg', '.svn',
+            'target', 'out', 'bin', 'obj',
+            '.idea', '.vscode', '.vs',
+            'site-packages', 'lib', 'include'
+        }
+        
+        # Common files to ignore
+        IGNORED_FILES = {
+            '.DS_Store', 'Thumbs.db', '*.pyc', '*.pyo', '*.pyd',
+            '*.so', '*.dylib', '*.dll', '*.egg-info'
+        }
+        
         try:
             path = self._validate_path(dir_path)
             
@@ -303,18 +336,47 @@ class RCodeFileOperations:
             
             files = []
             directories = []
+            ignored_count = 0
+            
+            def should_ignore_dir(dir_name: str, dir_path: Path) -> bool:
+                """Check if directory should be ignored"""
+                if dir_name in IGNORED_DIRS:
+                    return True
+                if dir_name.startswith('.') and dir_name not in {'.github', '.vscode', '.rcode'}:
+                    return True
+                return False
+            
+            def should_ignore_file(file_name: str) -> bool:
+                """Check if file should be ignored"""
+                if file_name in IGNORED_FILES:
+                    return True
+                if file_name.endswith(('.pyc', '.pyo', '.pyd', '.so', '.dylib', '.dll')):
+                    return True
+                return False
             
             if recursive:
                 for item in path.rglob(pattern):
+                    # Skip if any parent directory is ignored
+                    should_skip = False
+                    for parent in item.parents:
+                        if parent != path and should_ignore_dir(parent.name, parent):
+                            should_skip = True
+                            break
+                    
+                    if should_skip:
+                        ignored_count += 1
+                        continue
+                    
                     relative_path = item.relative_to(path)
-                    if item.is_file():
+                    
+                    if item.is_file() and not should_ignore_file(item.name):
                         files.append({
                             "name": item.name,
                             "path": str(relative_path),
                             "size": item.stat().st_size,
                             "type": "file"
                         })
-                    elif item.is_dir():
+                    elif item.is_dir() and not should_ignore_dir(item.name, item):
                         directories.append({
                             "name": item.name,
                             "path": str(relative_path),
@@ -322,14 +384,14 @@ class RCodeFileOperations:
                         })
             else:
                 for item in path.glob(pattern):
-                    if item.is_file():
+                    if item.is_file() and not should_ignore_file(item.name):
                         files.append({
                             "name": item.name,
                             "path": item.name,
                             "size": item.stat().st_size,
                             "type": "file"
                         })
-                    elif item.is_dir():
+                    elif item.is_dir() and not should_ignore_dir(item.name, item):
                         directories.append({
                             "name": item.name,
                             "path": item.name,
@@ -342,7 +404,8 @@ class RCodeFileOperations:
                 "files": files,
                 "directories": directories,
                 "total_files": len(files),
-                "total_directories": len(directories)
+                "total_directories": len(directories),
+                "ignored_items": ignored_count
             }
             
         except Exception as e:
@@ -378,13 +441,13 @@ def read_file(file_path: str) -> str:
         return f"❌ Error reading file: {result['error']}"
 
 
-@tool
+@tool("write_file", args_schema=WriteFileInputSchema)
 def write_file(file_path: str, content: str) -> str:
     """
     Write content to a file. Creates the file if it doesn't exist.
     
     Use this tool to create new files, save code, write documentation,
-    or update existing files with new content.
+    or update existing files with new content. Both parameters are REQUIRED.
     
     Args:
         file_path: Path where to write the file
@@ -575,17 +638,25 @@ def replace_in_file(file_path: str, search_term: str, replace_term: str, case_se
     Replace text within a file with new text.
     
     Use this tool to fix bugs, update code, modify configurations,
-    or make any text replacements within files.
+    or make any text replacements within files. All parameters are required.
     
     Args:
-        file_path: Path to the file to modify
-        search_term: Text to find and replace
-        replace_term: Text to replace with
-        case_sensitive: Whether replacement should be case sensitive (default: False)
+        file_path (str): Path to the file to modify - REQUIRED
+        search_term (str): Text to find and replace - REQUIRED  
+        replace_term (str): Text to replace with - REQUIRED
+        case_sensitive (bool): Whether replacement should be case sensitive (default: False)
         
     Returns:
         String with operation result
     """
+    # Validate parameters
+    if not file_path:
+        return "❌ Error: file_path parameter is required"
+    if not search_term:
+        return "❌ Error: search_term parameter is required"
+    if replace_term is None:
+        return "❌ Error: replace_term parameter is required"
+    
     result = _file_ops.replace_in_file(file_path, search_term, replace_term, case_sensitive)
     
     if result["success"]:

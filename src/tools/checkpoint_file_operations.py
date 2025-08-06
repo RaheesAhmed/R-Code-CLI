@@ -212,19 +212,19 @@ def read_file_checkpoint_aware(file_path: str) -> str:
 
 @tool
 def write_file_checkpoint_aware(file_path: str, content: str) -> str:
-    """
-    Write content to a file with automatic checkpoint tracking.
-    
-    This creates a checkpoint before writing, allowing you to undo changes.
-    The operation is automatically tracked and can be reverted.
+    """Write content to a file with automatic checkpoint tracking.
     
     Args:
-        file_path: Path where to write the file
-        content: Content to write to the file
-        
-    Returns:
-        String with operation result
+        file_path: The path where to write the file
+        content: The actual content to write to the file
     """
+    # Explicit parameter validation with clear error messages
+    if not file_path:
+        return "❌ PARAMETER ERROR: file_path is required but was empty. You must provide both file_path AND content parameters."
+    
+    if content is None:
+        return "❌ PARAMETER ERROR: content parameter is missing. You MUST call this tool with BOTH parameters: write_file_checkpoint_aware(file_path='your/path', content='your content here')"
+    
     if _checkpoint_file_ops is None:
         # Fallback to standard file operations
         from .file_operations import _file_ops
@@ -240,20 +240,13 @@ def write_file_checkpoint_aware(file_path: str, content: str) -> str:
 
 @tool
 def replace_in_file_checkpoint_aware(file_path: str, search_term: str, replace_term: str, case_sensitive: bool = False) -> str:
-    """
-    Replace text within a file with automatic checkpoint tracking.
-    
-    This creates a checkpoint before replacing, allowing you to undo changes.
-    The operation is automatically tracked and can be reverted.
+    """Replace text within a file with automatic checkpoint tracking.
     
     Args:
         file_path: Path to the file to modify
         search_term: Text to find and replace
         replace_term: Text to replace with
         case_sensitive: Whether replacement should be case sensitive (default: False)
-        
-    Returns:
-        String with operation result
     """
     if _checkpoint_file_ops is None:
         # Fallback to standard file operations
@@ -386,9 +379,10 @@ def search_in_file_checkpoint_aware(file_path: str, search_term: str, case_sensi
 @tool
 def list_files_checkpoint_aware(dir_path: str = ".", pattern: str = "*", recursive: bool = False) -> str:
     """
-    List files and directories (non-modifying operation).
+    List files and directories with smart filtering to avoid token overload.
     
-    This is identical to the standard list but part of the checkpoint-aware toolset.
+    Automatically excludes common large directories like .venv, node_modules, etc.
+    to prevent token limit errors and provide relevant project files only.
     
     Args:
         dir_path: Directory path to list (default: current directory)
@@ -396,7 +390,7 @@ def list_files_checkpoint_aware(dir_path: str = ".", pattern: str = "*", recursi
         recursive: Whether to list files recursively in subdirectories (default: False)
         
     Returns:
-        String with directory listing
+        String with directory listing (filtered)
     """
     from .file_operations import _file_ops
     result = _file_ops.list_files(dir_path, pattern, recursive)
@@ -405,7 +399,13 @@ def list_files_checkpoint_aware(dir_path: str = ".", pattern: str = "*", recursi
         return f"❌ Error listing files: {result['error']}"
     
     formatted_result = f"📁 Directory: {result['directory_path']}\n"
-    formatted_result += f"📊 Found: {result['total_files']} files, {result['total_directories']} directories\n\n"
+    formatted_result += f"📊 Found: {result['total_files']} files, {result['total_directories']} directories"
+    
+    # Show ignored count if any
+    if result.get('ignored_items', 0) > 0:
+        formatted_result += f" (excluded {result['ignored_items']} items from .venv, node_modules, etc.)"
+    
+    formatted_result += "\n\n"
     
     if result["directories"]:
         formatted_result += "📁 Directories:\n"
@@ -418,6 +418,9 @@ def list_files_checkpoint_aware(dir_path: str = ".", pattern: str = "*", recursi
         for file_info in result["files"]:
             size_kb = file_info['size'] / 1024
             formatted_result += f"  📄 {file_info['path']} ({size_kb:.1f} KB)\n"
+    
+    if not result["files"] and not result["directories"]:
+        formatted_result += "📝 No relevant files found (common build/cache directories are automatically excluded)\n"
     
     return formatted_result
 
