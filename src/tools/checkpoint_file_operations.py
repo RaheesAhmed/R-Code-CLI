@@ -184,7 +184,7 @@ def get_checkpoint_manager() -> Optional[CheckpointManager]:
 # Checkpoint-aware tool implementations
 
 @tool
-def read_file_checkpoint_aware(file_path: str) -> str:
+def read_file_checkpoint_aware(file_path: str = "") -> str:
     """
     Read the contents of a file with checkpoint awareness.
     
@@ -197,6 +197,10 @@ def read_file_checkpoint_aware(file_path: str) -> str:
     Returns:
         String containing file contents and metadata
     """
+    # Parameter validation
+    if not file_path or file_path.strip() == "":
+        return "❌ PARAMETER ERROR: file_path is required but was empty. You must provide the path to the file to read."
+    
     if _checkpoint_file_ops is None:
         # Fallback to standard file operations
         from .file_operations import _file_ops
@@ -211,7 +215,7 @@ def read_file_checkpoint_aware(file_path: str) -> str:
 
 
 @tool
-def write_file_checkpoint_aware(file_path: str, content: str) -> str:
+def write_file_checkpoint_aware(file_path: str = "", content: str = "") -> str:
     """Write content to a file with automatic checkpoint tracking.
     
     Args:
@@ -219,11 +223,11 @@ def write_file_checkpoint_aware(file_path: str, content: str) -> str:
         content: The actual content to write to the file
     """
     # Explicit parameter validation with clear error messages
-    if not file_path:
+    if not file_path or file_path.strip() == "":
         return "❌ PARAMETER ERROR: file_path is required but was empty. You must provide both file_path AND content parameters."
     
-    if content is None:
-        return "❌ PARAMETER ERROR: content parameter is missing. You MUST call this tool with BOTH parameters: write_file_checkpoint_aware(file_path='your/path', content='your content here')"
+    if content is None or content == "":
+        return "❌ PARAMETER ERROR: content parameter is missing or empty. You MUST call this tool with BOTH parameters: write_file_checkpoint_aware(file_path='your/path', content='your content here')"
     
     if _checkpoint_file_ops is None:
         # Fallback to standard file operations
@@ -239,7 +243,7 @@ def write_file_checkpoint_aware(file_path: str, content: str) -> str:
 
 
 @tool
-def replace_in_file_checkpoint_aware(file_path: str, search_term: str, replace_term: str, case_sensitive: bool = False) -> str:
+def replace_in_file_checkpoint_aware(file_path: str = "", search_term: str = "", replace_term: str = "", case_sensitive: bool = False) -> str:
     """Replace text within a file with automatic checkpoint tracking.
     
     Args:
@@ -248,6 +252,16 @@ def replace_in_file_checkpoint_aware(file_path: str, search_term: str, replace_t
         replace_term: Text to replace with
         case_sensitive: Whether replacement should be case sensitive (default: False)
     """
+    # Parameter validation
+    if not file_path or file_path.strip() == "":
+        return "❌ PARAMETER ERROR: file_path is required but was empty. You must provide file_path, search_term, and replace_term parameters."
+    
+    if not search_term or search_term.strip() == "":
+        return "❌ PARAMETER ERROR: search_term is required but was empty. You must provide the text to search for."
+    
+    if replace_term is None:
+        return "❌ PARAMETER ERROR: replace_term is required. You must provide the replacement text (can be empty string for deletion)."
+    
     if _checkpoint_file_ops is None:
         # Fallback to standard file operations
         from .file_operations import _file_ops
@@ -262,7 +276,7 @@ def replace_in_file_checkpoint_aware(file_path: str, search_term: str, replace_t
 
 
 @tool
-def delete_file_checkpoint_aware(file_path: str) -> str:
+def delete_file_checkpoint_aware(file_path: str = "") -> str:
     """
     Delete a file with automatic checkpoint tracking.
     
@@ -275,6 +289,10 @@ def delete_file_checkpoint_aware(file_path: str) -> str:
     Returns:
         String with operation result
     """
+    # Parameter validation
+    if not file_path or file_path.strip() == "":
+        return "❌ PARAMETER ERROR: file_path is required but was empty. You must provide the path to the file to delete."
+    
     if _checkpoint_file_ops is None:
         # Fallback to standard file operations
         from .file_operations import _file_ops
@@ -289,7 +307,7 @@ def delete_file_checkpoint_aware(file_path: str) -> str:
 
 
 @tool
-def create_directory_checkpoint_aware(dir_path: str) -> str:
+def create_directory_checkpoint_aware(dir_path: str = "") -> str:
     """
     Create a new directory with automatic checkpoint tracking.
     
@@ -302,6 +320,10 @@ def create_directory_checkpoint_aware(dir_path: str) -> str:
     Returns:
         String with operation result
     """
+    # Parameter validation
+    if not dir_path or dir_path.strip() == "":
+        return "❌ PARAMETER ERROR: dir_path is required but was empty. You must provide the path of the directory to create."
+    
     if _checkpoint_file_ops is None:
         # Fallback to standard file operations
         from .file_operations import _file_ops
@@ -316,7 +338,7 @@ def create_directory_checkpoint_aware(dir_path: str) -> str:
 
 
 @tool
-def delete_directory_checkpoint_aware(dir_path: str, recursive: bool = False) -> str:
+def delete_directory_checkpoint_aware(dir_path: str = "", recursive: bool = False) -> str:
     """
     Delete a directory with automatic checkpoint tracking.
     
@@ -330,6 +352,10 @@ def delete_directory_checkpoint_aware(dir_path: str, recursive: bool = False) ->
     Returns:
         String with operation result
     """
+    # Parameter validation
+    if not dir_path or dir_path.strip() == "":
+        return "❌ PARAMETER ERROR: dir_path is required but was empty. You must provide the path of the directory to delete."
+    
     if _checkpoint_file_ops is None:
         # Fallback to standard file operations
         from .file_operations import _file_ops
@@ -345,7 +371,7 @@ def delete_directory_checkpoint_aware(dir_path: str, recursive: bool = False) ->
 
 # Keep non-modifying operations the same
 @tool
-def search_in_file_checkpoint_aware(file_path: str, search_term: str, case_sensitive: bool = False) -> str:
+def search_in_file_checkpoint_aware(file_path: str = "", search_term: str = "", case_sensitive: bool = False) -> str:
     """
     Search for text within a file (non-modifying operation).
     
@@ -359,6 +385,13 @@ def search_in_file_checkpoint_aware(file_path: str, search_term: str, case_sensi
     Returns:
         String with search results
     """
+    # Parameter validation
+    if not file_path or file_path.strip() == "":
+        return "❌ PARAMETER ERROR: file_path is required but was empty. You must provide the path to the file to search in."
+    
+    if not search_term or search_term.strip() == "":
+        return "❌ PARAMETER ERROR: search_term is required but was empty. You must provide the text to search for."
+    
     from .file_operations import _file_ops
     result = _file_ops.search_in_file(file_path, search_term, case_sensitive)
     

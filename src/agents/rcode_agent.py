@@ -539,7 +539,12 @@ class IntelligentRCodeAgent:
         if not hasattr(self, 'graph') or not self.graph:
             self._build_graph(context)
         
-        config = {"configurable": {"thread_id": thread_id}}
+        # Add recursion limit to prevent infinite loops
+        config = {
+            "configurable": {"thread_id": thread_id},
+            "recursion_limit": 100,  # Prevent infinite loops
+            "max_execution_time": 300  # 5 minute timeout
+        }
         
         # Initialize state with learning data
         initial_state = {
@@ -552,43 +557,55 @@ class IntelligentRCodeAgent:
         
         ai_response_parts = []
         
-        # Stream with  context
-        async for stream_mode, chunk in self.graph.astream(
-            initial_state,
-            config,
-            stream_mode=["updates", "messages"]
-        ):
-            if stream_mode == "updates":
-                # Handle tool execution updates
-                for node_name, node_output in chunk.items():
-                    if node_name == "tools":
-                        if "messages" in node_output:
-                            for msg in node_output["messages"]:
-                                if hasattr(msg, 'content') and msg.content:
-                                    tool_name = getattr(msg, 'name', 'Tool')
-                                    yield {"type": "tool_result", "content": str(msg.content), "tool_name": tool_name}
-                    
-                    elif node_name == "agent":
-                        if "messages" in node_output:
-                            for msg in node_output["messages"]:
-                                if hasattr(msg, 'content') and isinstance(msg.content, list):
-                                    for item in msg.content:
-                                        if isinstance(item, dict) and item.get('type') == 'tool_use':
-                                            tool_name = item.get('name', 'Tool')
-                                            yield {"type": "tool_use", "tool_name": tool_name}
-            
-            elif stream_mode == "messages":
-                # Handle AI response streaming
-                message_chunk, metadata = chunk
-                if hasattr(message_chunk, 'content') and message_chunk.content:
-                    if isinstance(message_chunk.content, str):
-                        ai_response_parts.append(message_chunk.content)
-                        yield {"type": "token", "content": message_chunk.content}
-                    elif isinstance(message_chunk.content, list):
-                        for item in message_chunk.content:
-                            if isinstance(item, dict) and item.get('type') == 'text' and item.get('text'):
-                                ai_response_parts.append(item['text'])
-                                yield {"type": "token", "content": item['text']}
+        # Stream with enhanced context and error handling
+        try:
+            async for stream_mode, chunk in self.graph.astream(
+                initial_state,
+                config,
+                stream_mode=["updates", "messages"]
+            ):
+                if stream_mode == "updates":
+                    # Handle tool execution updates
+                    for node_name, node_output in chunk.items():
+                        if node_name == "tools":
+                            if "messages" in node_output:
+                                for msg in node_output["messages"]:
+                                    if hasattr(msg, 'content') and msg.content:
+                                        tool_name = getattr(msg, 'name', 'Tool')
+                                        yield {"type": "tool_result", "content": str(msg.content), "tool_name": tool_name}
+                        
+                        elif node_name == "agent":
+                            if "messages" in node_output:
+                                for msg in node_output["messages"]:
+                                    if hasattr(msg, 'content') and isinstance(msg.content, list):
+                                        for item in msg.content:
+                                            if isinstance(item, dict) and item.get('type') == 'tool_use':
+                                                tool_name = item.get('name', 'Tool')
+                                                yield {"type": "tool_use", "tool_name": tool_name}
+                
+                elif stream_mode == "messages":
+                    # Handle AI response streaming
+                    message_chunk, metadata = chunk
+                    if hasattr(message_chunk, 'content') and message_chunk.content:
+                        if isinstance(message_chunk.content, str):
+                            ai_response_parts.append(message_chunk.content)
+                            yield {"type": "token", "content": message_chunk.content}
+                        elif isinstance(message_chunk.content, list):
+                            for item in message_chunk.content:
+                                if isinstance(item, dict) and item.get('type') == 'text' and item.get('text'):
+                                    ai_response_parts.append(item['text'])
+                                    yield {"type": "token", "content": item['text']}
+        
+        except Exception as e:
+            error_msg = str(e)
+            if "recursion_limit" in error_msg.lower() or "recursion limit" in error_msg.lower():
+                yield {"type": "token", "content": "🔄 **Processing stopped**: The task became too complex and hit recursion limits. Let me provide a direct response instead.\n\n"}
+                # Provide a direct response without using the graph
+                yield {"type": "token", "content": await self._handle_direct_response(message, context)}
+            else:
+                yield {"type": "token", "content": f"❌ **Error occurred**: {error_msg}\n\nLet me try a simpler approach...\n\n"}
+                # Try a direct response as fallback
+                yield {"type": "token", "content": await self._handle_direct_response(message, context)}
         
         # Learn from this interaction
         full_ai_response = ''.join(ai_response_parts)
@@ -661,6 +678,30 @@ class IntelligentRCodeAgent:
                 score += 0.1
         
         return min(1.0, score)
+    
+    async def _handle_direct_response(self, message: str, context: RCodeContext) -> str:
+        """Handle direct response without graph when recursion limits are hit"""
+        try:
+            # Use primary model directly for simple responses
+            prompt = f"""You are R-Code AI, a helpful coding assistant. The user asked: "{message}"
+            
+            Provide a direct, helpful response. Keep it concise but informative.
+            If this is a coding question, provide code examples.
+            If this is a complex task, break it down into steps.
+            """
+            
+            response = await self.primary_model.ainvoke([
+                {"role": "system", "content": "You are a helpful coding assistant. Provide direct, actionable responses."},
+                {"role": "user", "content": message}
+            ])
+            
+            if hasattr(response, 'content'):
+                return response.content
+            else:
+                return str(response)
+                
+        except Exception as e:
+            return f"I apologize, but I encountered an error while processing your request: {str(e)}. Please try rephrasing your question or break it down into smaller parts."
     
     def get_learning_stats(self) -> Dict[str, Any]:
         """Get learning statistics"""
