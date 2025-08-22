@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rcode-cli"
-version = "1.0.0"
+version = "1.0.1"
 description = "R-Code AI-Powered Interactive Code Assistant - Advanced CLI tool with intelligent coding assistance"
 readme = "README.MD"
 license = {file = "LICENSE"}

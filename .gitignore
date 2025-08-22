@@ -103,6 +103,7 @@ __pypackages__/
 celerybeat-schedule
 Cline_system_prompt.md
 celerybeat.pid
+token.md
 
 # SageMath parsed files
 *.sage.py
